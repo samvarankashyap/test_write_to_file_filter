@@ -1,0 +1,21 @@
+---
+- name: run shell and fetch custom facts
+  hosts: localhost
+  tasks:
+    - name: test_var
+      set_fact:
+        # json string test
+        test_var:
+          test_key: "test_value"
+    - name: copy using filter
+      debug:
+        msg: "{{ test_var | to_nice_json | write_to_file('./shell-filter-results.json') }}"
+      delegate_to: localhost
+
+# this is old way of copying data to shell-results.txt
+#    - name: copy results to file
+#      shell:
+#        echo -e "({{ ansible_facts.hostname }} ,{{ sh_results.rc }}, \'\'\'{{ sh_results.stderr }}\'\'\')" \
+#        | sed -E ':a;N;$!ba;s/\\r{0,1}\\n/\\\\n/g' | tr -d '\\r' > ./shell-results.txt
+#      delegate_to: localhost
+
